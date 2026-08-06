@@ -75,11 +75,11 @@ export function DataTable<T extends Record<string, unknown>>({
   // Sorting
   const sortedData = [...filteredData].sort((a, b) => {
     if (!sortConfig) return 0;
-    const aValue = a[sortConfig.key];
-    const bValue = b[sortConfig.key];
+    const aValue = a[sortConfig.key as keyof T];
+    const bValue = b[sortConfig.key as keyof T];
 
-    if ((aValue as any) < (bValue as any)) return sortConfig.direction === "asc" ? -1 : 1;
-    if ((aValue as any) > (bValue as any)) return sortConfig.direction === "asc" ? 1 : -1;
+    if (aValue < bValue) return sortConfig.direction === "asc" ? -1 : 1;
+    if (aValue > bValue) return sortConfig.direction === "asc" ? 1 : -1;
     return 0;
   });
 

@@ -73,7 +73,7 @@ export default function DealsPage() {
         for (const item of syncQueue) {
           try {
             await updateDealStage(item.id, item.stage as 'new' | 'contacted' | 'proposal' | 'negotiation' | 'won' | 'lost');
-          } catch (e) {
+          } catch {
             console.error("Failed to sync queue item", item);
           }
         }
@@ -126,7 +126,19 @@ export default function DealsPage() {
 
   if (!currentUser) return null;
 
+  const { globalSearchQuery } = useStore();
+
   const filteredDeals = deals.filter(deal => {
+    // Apply global search filter
+    if (globalSearchQuery) {
+      const q = globalSearchQuery.toLowerCase();
+      if (!deal.title.toLowerCase().includes(q) &&
+          !(deal.company?.name || '').toLowerCase().includes(q) &&
+          !(deal.contact?.firstName || '').toLowerCase().includes(q)) {
+        return false;
+      }
+    }
+
     if (activeFilter === 'my-deals') return deal.rep?.name === currentUser.name;
     if (activeFilter === 'stale') return deal.staleDays > 5 && deal.stage !== 'won' && deal.stage !== 'lost';
     if (activeFilter === 'high-value') return deal.amount >= 50000000;

@@ -5,7 +5,6 @@ import { X, Mail, Send, Calendar, Phone, Activity } from "lucide-react";
 import { Deal } from "./KanbanBoard";
 import { getDealActivities, addActivity } from "@/app/actions/activity";
 import { useStore } from "@/store/useStore";
-import { twMerge } from "tailwind-merge";
 
 type DealActivity = Awaited<ReturnType<typeof getDealActivities>>[0];
 
