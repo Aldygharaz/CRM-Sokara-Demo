@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Sokara CRM - Causal Sales Intelligence & Simulation Suite</title>
+  
+  <!-- Critical Performance Optimization: Preconnect & Preload Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+  <link rel="dns-prefetch" href="https://cdn.tailwindcss.com"/>
+  
+  <!-- Premium SaaS Typography: DM Sans (UI + Headings) + JetBrains Mono (Financials) -->
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"/>
+  
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link rel="stylesheet" href="styles.css?v=20260729_0208"/>
+
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            /* RYVEN-inspired dark palette — registered for intellisense */
+            dark: {
+              page:    '#161618',
+              sidebar: '#1c1c1e',
+              card:    '#232325',
+              hover:   '#2c2c2e',
+              border:  '#38383a',
+            }
+          },
+          fontFamily: {
+            sans:     ['DM Sans', '-apple-system', 'sans-serif'],
+            headline: ['DM Sans', '-apple-system', 'sans-serif'],
+            mono:     ['JetBrains Mono', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-gradient-to-br from-blue-50 via-white to-blue-50 dark:from-[#161618] dark:to-[#1c1c1e] text-gray-900 dark:text-white font-sans min-h-screen flex flex-col relative transition-colors duration-200">
+
+  <!-- Ambient Interactive Canvas (Disabled) -->
+  <canvas id="ambient-canvas" class="hidden"></canvas>
+
+  <!-- Celebration Confetti Overlay Canvas -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- Main Shell Wrapper -->
+  <div class="relative z-10 flex min-h-screen w-full">
+
+    <!-- Executive Navigation Sidebar -->
+    <aside class="hidden lg:flex flex-col w-64 bg-white/70 backdrop-blur-xl dark:bg-[#1c1c1e]/80  dark:border-[#38383a] p-5 gap-6 sticky top-0 h-screen shrink-0 z-40 transition-colors">
+      
+      <!-- Brand Logo Header -->
+      <div class="flex items-center gap-3 px-2 py-1">
+        <div class="w-10 h-10 rounded-2xl bg-blue-600 p-0.5 shadow-sm">
+          <div class="w-full h-full bg-white dark:bg-slate-950 rounded-[10px] flex items-center justify-center text-blue-600 dark:text-blue-400">
+            <span class="material-symbols-outlined text-2xl">hub</span>
+          </div>
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold font-headline text-gray-900 dark:text-white tracking-tight leading-none">Sokara CRM</h1>
+          <p class="text-[11px] font-bold text-blue-600 dark:text-blue-400 mt-1 uppercase tracking-wider">Causal Intelligence</p>
+        </div>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="flex-1 space-y-1" id="sidebar-nav">
+        <a href="#dashboard" data-tab="dashboard" class="nav-link active flex items-center gap-3 px-3.5 py-2.5 rounded-2xl font-bold transition-all duration-150 magnetic-btn">
+          <span class="material-symbols-outlined text-xl">dashboard</span>
+          <span class="text-xs">Dashboard</span>
+        </a>
+        <a href="#pipeline" data-tab="pipeline" class="nav-link flex items-center gap-3 px-3.5 py-2.5 rounded-2xl font-semibold text-[#6b7280] dark:text-[#98989d] hover:bg-slate-50 dark:hover:bg-[#2c2c2e] hover:text-gray-900 dark:hover:text-white transition-all duration-150 magnetic-btn">
+          <span class="material-symbols-outlined text-xl">account_tree</span>
+          <span class="text-xs">Pipeline Board</span>
+          <span class="ml-auto bg-slate-50 dark:bg-[#2c2c2e] text-gray-600 dark:text-[#98989d] text-[11px] font-bold px-2 py-0.5 rounded-full font-mono-num border border-slate-100 dark:border-[#38383a]" id="pipeline-count-badge">12</span>
+        </a>
+        <a href="#insights" data-tab="insights" class="nav-link flex items-center gap-3 px-3.5 py-2.5 rounded-2xl font-semibold text-[#6b7280] dark:text-[#98989d] hover:bg-slate-50 dark:hover:bg-[#2c2c2e] hover:text-gray-900 dark:hover:text-white transition-all duration-150 magnetic-btn">
+          <span class="material-symbols-outlined text-xl">query_stats</span>
+          <span class="text-xs">Insights</span>
+        </a>
+        <a href="#settings" data-tab="settings" class="nav-link flex items-center gap-3 px-3.5 py-2.5 rounded-2xl font-semibold text-[#6b7280] dark:text-[#98989d] hover:bg-slate-50 dark:hover:bg-[#2c2c2e] hover:text-gray-900 dark:hover:text-white transition-all duration-150 magnetic-btn">
+          <span class="material-symbols-outlined text-xl">settings</span>
+          <span class="text-xs">Settings</span>
+        </a>
+      </nav>
+
+      <!-- User Profile & Role Card -->
+      <div class="p-3 bg-slate-50 dark:bg-[#2c2c2e] rounded-2xl border border-slate-100 dark:border-[#38383a] flex items-center gap-3">
+        <img class="w-9 h-9 rounded-full object-cover border border-slate-200 dark:border-[#38383a] shadow-sm" width="36" height="36" loading="eager" decoding="async" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4aSjO7XuuQ_n7SoLKrUxAQa00DE1YVhBTh0kpUU7qVmjs8BhjssSm57QCqPCmf9ZwnxnIkZncNmhLU_0rzTONDc4cVujA-FiYflRQ1CYk-JfuvcQ7NfdGPF4hvupcXCYFv6aE3sTh2wdpLv4rHkGW1shybaXSIQAm6IClhKZoetceTQ3aZF4Ru2wDfTQm4qTikMf2iAWXCXdgkuGHwR-YzP6Ke1likNGttc1nlOmYT6XvPUnNTC2azwQEz-7AyswSyzb_fo8_A28" alt="Alex Mercer"/>
+        <div class="overflow-hidden">
+          <p class="text-xs font-bold text-gray-900 dark:text-white truncate" id="current-user-name">Alex Mercer</p>
+          <p class="text-[11px] text-gray-500 dark:text-[#98989d] font-medium truncate" id="current-role-label">VP Sales Operations</p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Workspace Area -->
+    <div class="flex-1 flex flex-col min-w-0">
+      
+      <!-- Executive Header Bar -->
+      <header class="h-16 bg-white/70 backdrop-blur-xl dark:bg-[#1c1c1e]/80  dark:border-[#38383a] px-6 flex items-center justify-between sticky top-0 z-30 transition-colors shadow-sm">
+        
+        <!-- Search & Preset Filter Chips -->
+        <div class="flex items-center gap-4 flex-1 max-w-3xl">
+          <div class="relative w-80">
+            <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-base">search</span>
+            <input id="global-search" class="w-full bg-slate-50 dark:bg-[#2c2c2e] border border-slate-100 dark:border-[#38383a] rounded-full py-1.5 pl-10 pr-4 text-xs font-medium text-[#111827] dark:text-[#ffffff] placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all" placeholder="Search pipeline... (Ctrl+K)" type="text"/>
+          </div>
+
+        </div>
+
+        <!-- Global Control Actions -->
+        <div class="flex items-center gap-3">
+          
+          <!-- Context Switcher -->
+          <div class="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-full border border-slate-100 dark:border-[#38383a]">
+            <button id="btn-context-idr" onclick="setContext('IDR')" class="px-3 py-1 rounded-full text-xs font-bold bg-white dark:bg-slate-900 text-gray-900 dark:text-white shadow-sm transition-all">IDR</button>
+            <button id="btn-context-usd" onclick="setContext('USD')" class="px-3 py-1 rounded-full text-xs font-semibold text-gray-500 dark:text-[#98989d] hover:text-slate-900 dark:hover:text-white transition-all">USD</button>
+          </div>
+
+          <!-- Shortcuts Guide Trigger Button -->
+          <button onclick="openShortcutsModal()" class="p-2 text-gray-500 dark:text-[#98989d] hover:text-slate-900 dark:hover:text-white rounded-full text-xs font-bold flex items-center justify-center magnetic-btn" title="Keyboard Shortcuts Guide">
+            <span class="material-symbols-outlined text-xl">help_outline</span>
+          </button>
+
+          <!-- Light / Dark Mode Toggle Button -->
+          <button id="theme-toggle-btn" onclick="toggleTheme()" class="p-2 text-slate-500 dark:text-blue-400 hover:text-slate-900 dark:hover:text-white rounded-full text-xs font-bold flex items-center justify-center magnetic-btn" title="Toggle Theme (Light / Dark)">
+            <span class="material-symbols-outlined text-xl" id="theme-toggle-icon">dark_mode</span>
+          </button>
+
+          <!-- Primary Accent Button -->
+          <button onclick="openNewDealModal()" class="btn-primary-accent">
+            <span class="material-symbols-outlined text-base">add</span>
+            <span class="hidden sm:inline">New Lead</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- VIEW PANE 1: DASHBOARD VIEW -->
+      <section id="dashboard-view" class="view-pane active p-6 sm:p-8 space-y-6 max-w-[1920px] mx-auto w-full">
+        
+        <!-- Framing Intro Banner -->
+        <div class="glass-panel-glow p-5 rounded-2xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4 relative overflow-hidden">
+          <div class="space-y-1">
+            <span class="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider flex items-center gap-1">
+              <span class="material-symbols-outlined text-base">psychology</span> Showcase Orchestration AI
+            </span>
+            <h2 class="text-base font-bold font-headline text-gray-900 dark:text-white">
+              "Bayangkan Anda memiliki 20 leads aktif minggu ini. Mana yang paling bernilai, dan keputusan apa yang dapat meningkatkan hasil penutupan deal? Geser variabelnya untuk melihat proyeksi real-time."
+            </h2>
+          </div>
+          <button onclick="switchTab('pipeline')" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-2xl shadow-sm shrink-0 magnetic-btn">
+            Kelola Pipeline &rarr;
+          </button>
+        </div>
+
+        <!-- Sales Rep Quota Progress Bar -->
+        <div id="rep-quota-card" class="glass-panel p-5 rounded-2xl border-slate-100 dark:border-[#38383a] hidden space-y-3">
+          <div class="flex justify-between items-center">
+            <div>
+              <h3 class="text-sm font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                <span class="material-symbols-outlined text-blue-600">target</span>
+                Alex Mercer's Quarterly Quota Target (<span id="rep-quota-target-text">Rp 250M</span>)
+              </h3>
+              <p class="text-xs font-semibold text-gray-500 dark:text-[#98989d] mt-0.5">Current closed revenue: <span class="text-blue-600 dark:text-blue-400 font-extrabold font-mono-num" id="rep-quota-current">Rp 165M</span> (66% achieved)</p>
+            </div>
+            <span class="pill-badge pill-badge-emerald" id="rep-quota-remaining">Rp 85M to goal</span>
+          </div>
+          <div class="w-full bg-gray-200 dark:bg-[#38383a] h-2.5 rounded-full overflow-hidden">
+            <div class="bg-blue-600 h-full rounded-full transition-all duration-300" style="width: 66%;"></div>
+          </div>
+        </div>
+
+        <!-- Executive KPI Spotlight Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          
+          <div class="bg-white dark:bg-[#1a1a1a] p-5 rounded-2xl border border-slate-100 dark:border-[#38383a] space-y-1 interactive-tilt-card scroll-reveal-item">
+            <div class="flex justify-between items-center">
+              <p class="text-xs font-medium text-gray-500 dark:text-[#98989d]">Gross pipeline value</p>
+              <span class="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">↑ +14.2%</span>
+            </div>
+            <p class="text-2xl font-bold text-gray-900 dark:text-white font-mono-num" id="stat-total-pipeline">Rp 472.5M</p>
+          </div>
+
+          <div class="bg-white dark:bg-[#1a1a1a] p-5 rounded-2xl border border-slate-100 dark:border-[#38383a] space-y-1 interactive-tilt-card scroll-reveal-item">
+            <div class="flex justify-between items-center">
+              <p class="text-xs font-medium text-gray-500 dark:text-[#98989d]">Active opportunities</p>
+              <span class="text-[11px] font-medium text-gray-400 dark:text-[#636366]">4 sales reps</span>
+            </div>
+            <p class="text-2xl font-bold text-gray-900 dark:text-white font-mono-num" id="stat-active-leads">18 leads</p>
+          </div>
+
+          <div class="bg-white dark:bg-[#1a1a1a] p-5 rounded-2xl border border-slate-100 dark:border-[#38383a] space-y-1 interactive-tilt-card scroll-reveal-item">
+            <div class="flex justify-between items-center">
+              <p class="text-xs font-medium text-gray-500 dark:text-[#98989d]">Median deal size</p>
+              <span class="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">↑ +8.5%</span>
+            </div>
+            <p class="text-2xl font-bold text-gray-900 dark:text-white font-mono-num" id="stat-median-deal">Rp 38.5M</p>
+          </div>
+
+          <!-- Historical Win Rate Highlighted Green Card -->
+          <div class="bg-emerald-100/70 dark:bg-emerald-950/40 p-5 rounded-2xl border border-emerald-200/80 dark:border-emerald-800/40 space-y-1 interactive-tilt-card scroll-reveal-item">
+            <div class="flex justify-between items-center">
+              <p class="text-xs font-semibold text-emerald-800 dark:text-emerald-300">Historical win rate</p>
+              <span class="text-[11px] font-semibold text-emerald-700 dark:text-emerald-300">Target 65%</span>
+            </div>
+            <p class="text-2xl font-bold text-emerald-700 dark:text-emerald-400 font-mono-num" id="stat-win-rate">68.5%</p>
+          </div>
+
+        </div>
+
+        <!-- Main Dashboard: HERO What-if Simulation (2 cols) & Smart Follow-up Priority (1 col) -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+          
+          <!-- Left 2 Columns: What-If Simulation Box -->
+          <div class="lg:col-span-2 bg-white dark:bg-[#1a1a1a] rounded-2xl p-6 border border-slate-100 dark:border-[#38383a] space-y-5 interactive-tilt-card scroll-reveal-item">
+            
+            <div class="space-y-1">
+              <h2 class="text-base font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                <span class="material-symbols-outlined text-lg text-gray-700 dark:text-gray-300">tune</span>
+                Simulator "what-if" strategi sales
+              </h2>
+              <p class="text-xs text-gray-500 dark:text-[#98989d]">Geser slider untuk melihat proyeksi revenue dan win-rate.</p>
+            </div>
+
+            <!-- Single Variable Scenario Switcher Buttons -->
+            <div class="flex flex-wrap gap-2">
+              <button onclick="setSimScenario('response_time')" id="scen-response-btn" class="px-4 py-2 rounded-2xl text-xs font-semibold bg-blue-600 text-white shadow-sm transition-all">Percepat response time</button>
+              <button onclick="setSimScenario('discount')" id="scen-discount-btn" class="px-4 py-2 rounded-2xl text-xs font-semibold bg-white dark:bg-[#2c2c2e] border border-slate-100 dark:border-[#38383a] text-gray-700 dark:text-[#98989d] hover:text-gray-900 dark:hover:text-white transition-all">Diskon volume</button>
+              <button onclick="setSimScenario('source')" id="scen-source-btn" class="px-4 py-2 rounded-2xl text-xs font-semibold bg-white dark:bg-[#2c2c2e] border border-slate-100 dark:border-[#38383a] text-gray-700 dark:text-[#98989d] hover:text-gray-900 dark:hover:text-white transition-all">Prioritas referral</button>
+            </div>
+
+            <!-- Active Variable Slider Panel -->
+            <div id="sim-control-panel" class="pt-1">
+              <!-- Rendered dynamically by app.js -->
+            </div>
+
+            <!-- Read-Only Projection Metric Display Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+              <div class="bg-gray-50 dark:bg-[#232325] p-3.5 rounded-2xl border border-slate-100 dark:border-[#38383a]">
+                <p class="text-[11px] font-semibold text-gray-500 dark:text-[#98989d] uppercase tracking-wider mb-1">Proyeksi Tambahan Revenue</p>
+                <p class="text-xl font-bold text-emerald-600 dark:text-emerald-400 font-mono-num" id="sim-added-revenue">+Rp 138.4M</p>
+              </div>
+
+              <div class="bg-gray-50 dark:bg-[#232325] p-3.5 rounded-2xl border border-slate-100 dark:border-[#38383a]">
+                <p class="text-[11px] font-semibold text-gray-500 dark:text-[#98989d] uppercase tracking-wider mb-1">Estimasi Win Rate & Velocity</p>
+                <div class="flex items-center gap-2">
+                  <p class="text-xl font-bold text-gray-900 dark:text-white font-mono-num" id="sim-win-rate">74%</p>
+                  <span id="sim-win-delta" class="text-xs font-semibold text-emerald-600 dark:text-emerald-400 font-mono-num">
+                    +15.5% (5d saved)
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Green Result Alert Banner -->
+            <div id="sim-executive-verdict" class="bg-emerald-100/80 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/40 p-3.5 rounded-2xl">
+              <p class="text-xs font-semibold text-emerald-800 dark:text-emerald-300 leading-snug" id="sim-verdict-text">
+                Respons <18 jam diproyeksikan menambah +Rp 139.1M revenue dan meningkatkan win rate +47.0%.
+              </p>
+            </div>
+
+            <!-- Affected Deals Breakdown Table Matrix -->
+            <div id="sim-affected-deals">
+              <!-- Rendered dynamically by app.js -->
+            </div>
+
+            <!-- Executive Action Plan Callout Card -->
+            <div class="pt-3 border-t border-slate-100 dark:border-[#38383a] space-y-2.5">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-gray-900 dark:text-white flex items-center gap-1.5">
+                  <span class="material-symbols-outlined text-sm text-blue-600 dark:text-blue-400">rocket_launch</span>
+                  Recommended Causal Action Plan
+                </span>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400">Highest ROI</span>
+              </div>
+              <p class="text-xs text-gray-600 dark:text-[#98989d] leading-relaxed">
+                Terapkan skenario ini secara otomatis ke seluruh 18 active deals untuk memaksimalkan proyeksi revenue dan kecepatan penutupan deal.
+              </p>
+              <button onclick="executeApplySimStrategy()" class="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white text-xs font-semibold rounded-2xl shadow-sm transition-all flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined text-base">task_alt</span>
+                Terapkan Strategi Ini ke Active Pipeline
+              </button>
+            </div>
+
+          </div>
+
+          <!-- Right 1 Column: Smart Follow-up Priority Section -->
+          <div class="lg:col-span-1 bg-white dark:bg-[#1a1a1a] rounded-2xl p-6 border border-slate-100 dark:border-[#38383a] space-y-4 interactive-tilt-card scroll-reveal-item">
+            <div class="flex items-center justify-between">
+              <h3 class="text-base font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                <span class="material-symbols-outlined text-lg text-gray-700 dark:text-gray-300">bolt</span>
+                Smart follow-up priority
+              </h3>
+            </div>
+
+            <div class="space-y-3" id="priority-list-container">
+              <!-- Rendered dynamically by app.js -->
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- VIEW PANE 2: PIPELINE VIEW -->
+      <section id="pipeline-view" class="view-pane p-6 sm:p-8 space-y-6 max-w-[1920px] mx-auto w-full">
+        
+        <!-- Board Header & View Switcher -->
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div>
+            <h2 class="text-2xl font-extrabold font-headline text-gray-900 dark:text-white">Pipeline Board</h2>
+            <p class="text-xs font-medium text-gray-500 dark:text-[#98989d] mt-1">Stages: New Lead &rarr; Contacted &rarr; Proposal &rarr; Negotiation &rarr; Closed Won</p>
+          </div>
+          
+          <div class="flex items-center gap-3">
+            <!-- View Switcher -->
+            <div class="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-full border border-slate-100 dark:border-[#38383a]">
+              <button id="btn-view-kanban" onclick="setPipelineView('kanban')" class="px-3 py-1.5 rounded-full text-xs font-bold bg-white dark:bg-slate-900 text-gray-900 dark:text-white shadow-sm flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm">view_kanban</span> Board
+              </button>
+              <button id="btn-view-table" onclick="setPipelineView('table')" class="px-3 py-1.5 rounded-full text-xs font-semibold text-gray-500 dark:text-[#98989d] hover:text-slate-900 dark:hover:text-white flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm">table_rows</span> Table
+              </button>
+            </div>
+
+            <button onclick="printReport()" class="px-3.5 py-2 border border-slate-100 dark:border-[#38383a] bg-white dark:bg-slate-800 text-gray-700 dark:text-[#d1d1d6] rounded-full text-xs font-bold flex items-center gap-1.5 magnetic-btn">
+              <span class="material-symbols-outlined text-base">print</span> Print
+            </button>
+            <button onclick="openNewDealModal()" class="btn-primary-accent">
+              <span class="material-symbols-outlined text-base">add</span> New Lead
+            </button>
+          </div>
+        </div>
+
+        <!-- Kanban View Container -->
+        <div id="kanban-view-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 min-h-[620px] overflow-x-auto pb-6">
+          
+          <!-- 1. New Lead -->
+          <div class="kanban-col bg-white/40 backdrop-blur-md dark:bg-[#1c1c1e] rounded-2xl p-3.5  flex flex-col space-y-3" data-stage="new-lead" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 'new-lead')">
+            <div class="flex justify-between items-center pb-2  dark:border-[#38383a]">
+              <span class="font-headline font-bold text-xs text-gray-700 dark:text-[#d1d1d6] flex items-center gap-1.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-slate-400"></span> New Lead (10%)
+              </span>
+              <span class="bg-white dark:bg-slate-800 text-gray-700 dark:text-[#d1d1d6] text-xs font-bold px-2 py-0.5 rounded-full font-mono-num border border-slate-100 dark:border-[#38383a]" id="col-count-new-lead">0</span>
+            </div>
+            <div class="kanban-card-container space-y-3 flex-1 overflow-y-auto" id="col-cards-new-lead"></div>
+          </div>
+
+          <!-- 2. Contacted -->
+          <div class="kanban-col bg-white/40 backdrop-blur-md dark:bg-[#1c1c1e] rounded-2xl p-3.5  flex flex-col space-y-3" data-stage="contacted" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 'contacted')">
+            <div class="flex justify-between items-center pb-2  dark:border-[#38383a]">
+              <span class="font-headline font-bold text-xs text-gray-700 dark:text-[#d1d1d6] flex items-center gap-1.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-indigo-500"></span> Contacted (25%)
+              </span>
+              <span class="bg-white dark:bg-slate-800 text-gray-700 dark:text-[#d1d1d6] text-xs font-bold px-2 py-0.5 rounded-full font-mono-num border border-slate-100 dark:border-[#38383a]" id="col-count-contacted">0</span>
+            </div>
+            <div class="kanban-card-container space-y-3 flex-1 overflow-y-auto" id="col-cards-contacted"></div>
+          </div>
+
+          <!-- 3. Demo/Proposal -->
+          <div class="kanban-col bg-white/40 backdrop-blur-md dark:bg-[#1c1c1e] rounded-2xl p-3.5  flex flex-col space-y-3" data-stage="proposal" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 'proposal')">
+            <div class="flex justify-between items-center pb-2  dark:border-[#38383a]">
+              <span class="font-headline font-bold text-xs text-gray-700 dark:text-[#d1d1d6] flex items-center gap-1.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-purple-500"></span> Proposal (50%)
+              </span>
+              <span class="bg-white dark:bg-slate-800 text-gray-700 dark:text-[#d1d1d6] text-xs font-bold px-2 py-0.5 rounded-full font-mono-num border border-slate-100 dark:border-[#38383a]" id="col-count-proposal">0</span>
+            </div>
+            <div class="kanban-card-container space-y-3 flex-1 overflow-y-auto" id="col-cards-proposal"></div>
+          </div>
+
+          <!-- 4. Negotiation -->
+          <div class="kanban-col bg-white/40 backdrop-blur-md dark:bg-[#1c1c1e] rounded-2xl p-3.5  flex flex-col space-y-3" data-stage="negotiation" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 'negotiation')">
+            <div class="flex justify-between items-center pb-2  dark:border-[#38383a]">
+              <span class="font-headline font-bold text-xs text-gray-700 dark:text-[#d1d1d6] flex items-center gap-1.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-amber-600"></span> Negotiation (75%)
+              </span>
+              <span class="bg-white dark:bg-slate-800 text-gray-700 dark:text-[#d1d1d6] text-xs font-bold px-2 py-0.5 rounded-full font-mono-num border border-slate-100 dark:border-[#38383a]" id="col-count-negotiation">0</span>
+            </div>
+            <div class="kanban-card-container space-y-3 flex-1 overflow-y-auto" id="col-cards-negotiation"></div>
+          </div>
+
+          <!-- 5. Closed Won / Lost -->
+          <div class="kanban-col bg-white/40 backdrop-blur-md dark:bg-[#1c1c1e] rounded-2xl p-3.5  flex flex-col space-y-3" data-stage="closed-won" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 'closed-won')">
+            <div class="flex justify-between items-center pb-2  dark:border-[#38383a]">
+              <span class="font-headline font-bold text-xs text-gray-700 dark:text-[#d1d1d6] flex items-center gap-1.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Closed Won (100%)
+              </span>
+              <span class="bg-white dark:bg-slate-800 text-gray-700 dark:text-[#d1d1d6] text-xs font-bold px-2 py-0.5 rounded-full font-mono-num border border-slate-100 dark:border-[#38383a]" id="col-count-closed-won">0</span>
+            </div>
+            <div class="kanban-card-container space-y-3 flex-1 overflow-y-auto" id="col-cards-closed-won"></div>
+          </div>
+
+        </div>
+
+        <!-- Tabular Data View Container with Bulk Actions Bar -->
+        <div id="table-view-container" class="hidden glass-panel rounded-2xl p-6 border-slate-100 dark:border-[#38383a] space-y-4 overflow-x-auto">
+          
+          <!-- Bulk Action Toolbar -->
+          <div class="flex items-center justify-between bg-gray-50 dark:bg-[#1c1c1e] p-3 rounded-2xl border border-slate-100 dark:border-[#38383a]">
+            <div class="flex items-center gap-3">
+              <span class="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-indigo-500 text-base">checklist</span>
+                Bulk Operations
+              </span>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="executeBulkMove('negotiation')" class="px-3 py-1.5 bg-amber-50 dark:bg-amber-950/30 hover:bg-amber-100 text-amber-700 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800/40 rounded-full text-xs font-bold flex items-center gap-1 magnetic-btn">
+                Move Selected to Negotiation
+              </button>
+              <button onclick="executeBulkMove('closed-won')" class="px-3 py-1.5 bg-emerald-50 dark:bg-emerald-950/30 hover:bg-emerald-100 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/60 rounded-full text-xs font-bold flex items-center gap-1 magnetic-btn">
+                Move Selected to Closed Won 🎉
+              </button>
+            </div>
+          </div>
+
+          <table class="w-full text-left text-xs">
+            <thead>
+              <tr class=" dark:border-[#38383a] text-gray-500 dark:text-[#98989d] font-bold uppercase tracking-wider">
+                <th class="py-3 px-3">
+                  <input type="checkbox" id="master-checkbox-all" onchange="toggleSelectAllDeals(this)" class="rounded border-slate-300 dark:border-slate-700 text-indigo-500 focus:ring-amber-500"/>
+                </th>
+                <th class="py-3 px-4 cursor-pointer hover:text-indigo-500" onclick="setTableSort('title')">Perusahaan / Contact ↕</th>
+                <th class="py-3 px-4 cursor-pointer hover:text-indigo-500" onclick="setTableSort('initialValue')">Initial Value ↕</th>
+                <th class="py-3 px-4 cursor-pointer hover:text-indigo-500" onclick="setTableSort('amount')">Current Gross ↕</th>
+                <th class="py-3 px-4 cursor-pointer hover:text-indigo-500" onclick="setTableSort('ev')">Weighted EV ↕</th>
+                <th class="py-3 px-4 cursor-pointer hover:text-indigo-500" onclick="setTableSort('winScore')">Win Score ↕</th>
+                <th class="py-3 px-4">Stage & Probability</th>
+                <th class="py-3 px-4">Sumber Lead</th>
+                <th class="py-3 px-4">Assignee</th>
+                <th class="py-3 px-4 text-right">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="pipeline-table-body" class="divide-y divide-slate-100 dark:divide-[#38383a]">
+              <!-- Rendered by app.js -->
+            </tbody>
+          </table>
+        </div>
+
+      </section>
+
+      <!-- VIEW PANE 3: INSIGHTS VIEW -->
+      <section id="insights-view" class="view-pane p-6 sm:p-8 space-y-6 max-w-[1920px] mx-auto w-full">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div>
+            <h2 class="text-2xl font-extrabold font-headline text-gray-900 dark:text-white">Revenue Forecast & Data Insights</h2>
+            <p class="text-xs font-medium text-gray-500 dark:text-[#98989d] mt-1">Calculated from 2-3 months historical deal metrics & conversion data.</p>
+          </div>
+
+          <span class="disclaimer-badge">
+            <span class="material-symbols-outlined text-xs">info</span>
+            Simulasi berdasarkan data contoh: bukan proyeksi bisnis riil.
+          </span>
+        </div>
+
+        <!-- Forecast Range Estimate Card -->
+        <div class="glass-panel-glow p-6 rounded-2xl space-y-3 interactive-tilt-card">
+          <p class="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider">Estimated Revenue Forecast (Range Model)</p>
+          <div class="flex items-baseline gap-3">
+            <p class="font-headline text-4xl font-extrabold text-gray-900 dark:text-white font-mono-num" id="forecast-range-text">Rp 80.000.000 - Rp 120.000.000</p>
+            <span class="text-xs font-bold text-gray-500 dark:text-[#98989d]">berdasarkan 12 deal aktif</span>
+          </div>
+          <p class="text-xs font-medium text-gray-600 dark:text-[#d1d1d6] leading-relaxed">
+            *Forecast dihitung berdasarkan kombinasi win-rate historis per stage (Closed Won : Total Closed) dan bobot probabilitas deal.
+          </p>
+        </div>
+
+        <!-- Automatic Insights Generated From Actual Data -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          
+          <div class="glass-panel p-5 rounded-2xl space-y-2.5 interactive-tilt-card">
+            <div class="flex items-center gap-2 text-rose-600 dark:text-rose-400 font-bold text-xs uppercase">
+              <span class="material-symbols-outlined text-base">cancel</span> Closed Lost Analytics
+            </div>
+            <h4 class="font-bold text-sm text-gray-900 dark:text-white" id="insight-lost-reason">60% deal lost bulan ini karena alasan harga</h4>
+            <p class="text-xs font-medium text-gray-600 dark:text-[#d1d1d6] leading-relaxed">
+              Analisis data historis menunjukkan alasan terbanyak penolakan adalah kesesuaian budget. Disarankan penyesuaian tier paket SMB.
+            </p>
+          </div>
+
+          <div class="glass-panel p-5 rounded-2xl space-y-2.5 interactive-tilt-card">
+            <div class="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-bold text-xs uppercase">
+              <span class="material-symbols-outlined text-base">trending_up</span> Conversion Attribution
+            </div>
+            <h4 class="font-bold text-sm text-gray-900 dark:text-white" id="insight-source-win">Lead dari Referral punya win-rate 2.2x lebih tinggi</h4>
+            <p class="text-xs font-medium text-gray-600 dark:text-[#d1d1d6] leading-relaxed">
+              Pola korelasi data generator: Lead dari sumber referral menghasilkan win rate ~65% vs sosmed/cold outreach (~28%).
+            </p>
+          </div>
+
+        </div>
+
+        <!-- Monthly Velocity Chart -->
+        <div class="glass-panel p-6 rounded-2xl space-y-6 interactive-tilt-card">
+          <h3 class="text-lg font-bold font-headline text-gray-900 dark:text-white">Pipeline Trend History (2-3 Months)</h3>
+          <div class="h-60 flex items-end justify-between gap-4 pt-6 px-4  dark:border-[#38383a]">
+            <div class="flex-1 flex flex-col items-center gap-2">
+              <div class="w-full max-w-[48px] bg-blue-500/30 hover:bg-blue-600 rounded-t-lg transition-all" style="height: 40%;" title="Bulan 1: 40%"></div>
+              <span class="text-xs font-bold text-gray-500 dark:text-[#98989d]">Mei</span>
+            </div>
+            <div class="flex-1 flex flex-col items-center gap-2">
+              <div class="w-full max-w-[48px] bg-blue-500/60 hover:bg-blue-600 rounded-t-lg transition-all" style="height: 60%;" title="Bulan 2: 60%"></div>
+              <span class="text-xs font-bold text-gray-500 dark:text-[#98989d]">Juni</span>
+            </div>
+            <div class="flex-1 flex flex-col items-center gap-2">
+              <div class="w-full max-w-[48px] bg-blue-600 rounded-t-lg transition-all shadow-md shadow-blue-500/15" style="height: 90%;" title="Bulan 3: 90%"></div>
+              <span class="text-xs font-bold text-blue-600 dark:text-blue-400">Juli (Sekarang)</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW PANE 4: SETTINGS VIEW -->
+      <section id="settings-view" class="view-pane p-6 sm:p-8 space-y-6 max-w-[1920px] mx-auto w-full">
+        <div>
+          <h2 class="text-2xl font-extrabold font-headline text-gray-900 dark:text-white">System & Database Settings</h2>
+          <p class="text-xs font-semibold text-gray-500 dark:text-[#98989d] mt-1">Manage Google Sheets backend integration, LocalStorage cache, and theme preferences.</p>
+        </div>
+
+        <div class="glass-panel p-6 rounded-2xl space-y-5 interactive-tilt-card">
+          <h3 class="text-base font-bold font-headline text-gray-900 dark:text-white">Google Sheets Database Endpoints</h3>
+          <div class="space-y-4">
+            <div>
+              <label class="text-xs font-bold uppercase text-gray-600 dark:text-[#98989d]">Apps Script Webhook URL</label>
+              <input type="text" value="https://script.google.com/macros/s/AKfycbx_sokara_crm_demo/exec" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-[#38383a] rounded-2xl p-2.5 text-xs font-medium text-gray-900 dark:text-white mt-1 font-mono"/>
+            </div>
+            <div class="flex flex-wrap gap-3">
+              <button onclick="triggerSetupDatabase()" class="btn-primary-accent px-4 py-2 text-xs flex items-center gap-2 shadow-sm">
+                <span class="material-symbols-outlined text-base">database</span> Trigger setupDatabase()
+              </button>
+              <button onclick="exportJSONStateBackup()" class="px-4 py-2 border border-slate-100 dark:border-[#38383a] bg-white dark:bg-slate-800 text-gray-900 dark:text-white rounded-full text-xs font-bold flex items-center gap-2 magnetic-btn">
+                <span class="material-symbols-outlined text-base">download_for_offline</span> Export JSON Backup
+              </button>
+              <label class="px-4 py-2 border border-slate-100 dark:border-[#38383a] bg-white dark:bg-slate-800 text-gray-900 dark:text-white rounded-full text-xs font-bold flex items-center gap-2 cursor-pointer magnetic-btn">
+                <span class="material-symbols-outlined text-base">upload_file</span> Import JSON Backup
+                <input type="file" accept=".json" onchange="importJSONStateBackup(event)" class="hidden"/>
+              </label>
+              <button onclick="resetAppState()" class="px-4 py-2 border border-slate-100 dark:border-[#38383a] hover:border-rose-300 bg-white dark:bg-slate-800 text-rose-600 dark:text-rose-400 rounded-full text-xs font-bold flex items-center gap-2 magnetic-btn">
+                <span class="material-symbols-outlined text-base">delete_forever</span> Reset Session Demo Data
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- KEYBOARD SHORTCUTS GUIDE MODAL -->
+  <div id="shortcuts-modal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="glass-panel rounded-2xl p-6 max-w-md w-full space-y-4 shadow-xl">
+      <div class="flex justify-between items-center  dark:border-[#38383a] pb-3">
+        <h3 class="text-base font-bold text-gray-900 dark:text-white font-headline flex items-center gap-2">
+          <span class="material-symbols-outlined text-indigo-500">keyboard</span>
+          Keyboard Shortcuts Guide
+        </h3>
+        <button onclick="closeShortcutsModal()" class="p-1 text-gray-400 hover:text-slate-900 dark:hover:text-white">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <div class="space-y-2.5 text-xs">
+        <div class="flex justify-between items-center p-2 bg-gray-50 dark:bg-[#232325] rounded-lg border border-slate-100 dark:border-[#38383a]">
+          <span class="text-gray-700 dark:text-[#d1d1d6] font-medium">Fokus Pencarian Global</span>
+          <kbd class="px-2 py-0.5 bg-white dark:bg-slate-800 text-gray-900 dark:text-white rounded text-[10px] font-bold font-mono border border-slate-100 dark:border-[#38383a]">Ctrl + K</kbd>
+        </div>
+        <div class="flex justify-between items-center p-2 bg-gray-50 dark:bg-[#232325] rounded-lg border border-slate-100 dark:border-[#38383a]">
+          <span class="text-gray-700 dark:text-[#d1d1d6] font-medium">Reset Semua Filter</span>
+          <kbd class="px-2 py-0.5 bg-white dark:bg-slate-800 text-gray-900 dark:text-white rounded text-[10px] font-bold font-mono border border-slate-100 dark:border-[#38383a]">Ctrl + Shift + F</kbd>
+        </div>
+        <div class="flex justify-between items-center p-2 bg-gray-50 dark:bg-[#232325] rounded-lg border border-slate-100 dark:border-[#38383a]">
+          <span class="text-gray-700 dark:text-[#d1d1d6] font-medium">Toggle Mode Terang / Gelap</span>
+          <kbd class="px-2 py-0.5 bg-white dark:bg-slate-800 text-gray-900 dark:text-white rounded text-[10px] font-bold font-mono border border-slate-100 dark:border-[#38383a]">Ctrl + M</kbd>
+        </div>
+        <div class="flex justify-between items-center p-2 bg-gray-50 dark:bg-[#232325] rounded-lg border border-slate-100 dark:border-[#38383a]">
+          <span class="text-gray-700 dark:text-[#d1d1d6] font-medium">Bersihkan Input Pencarian</span>
+          <kbd class="px-2 py-0.5 bg-white dark:bg-slate-800 text-gray-900 dark:text-white rounded text-[10px] font-bold font-mono border border-slate-100 dark:border-[#38383a]">Escape</kbd>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CLOSED LOST REASON MODAL -->
+  <div id="closed-lost-modal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="glass-panel rounded-2xl border-rose-300 dark:border-rose-500/40 p-6 max-w-md w-full space-y-4 shadow-xl">
+      <div class="flex justify-between items-center  dark:border-[#38383a] pb-3">
+        <h3 class="text-base font-bold text-gray-900 dark:text-white font-headline flex items-center gap-2">
+          <span class="material-symbols-outlined text-rose-600">cancel</span>
+          Konfirmasi Deal Closed Lost
+        </h3>
+        <button onclick="closeClosedLostModal()" class="p-1 text-gray-400 hover:text-slate-900 dark:hover:text-white">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <p class="text-xs font-medium text-gray-600 dark:text-[#d1d1d6]">Pilih alasan penolakan deal untuk diolah dalam analytics:</p>
+
+      <form onsubmit="handleConfirmClosedLost(event)" class="space-y-4">
+        <input type="hidden" id="closed-lost-deal-id"/>
+        <div>
+          <label class="text-xs font-bold uppercase text-gray-600 dark:text-[#98989d]">Alasan Utama</label>
+          <select id="closed-lost-reason" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-[#38383a] rounded-2xl p-2.5 text-xs font-medium text-gray-900 dark:text-white mt-1">
+            <option value="harga">Harga / Budget Tidak Sesuai</option>
+            <option value="timing">Timing Belum Tepat</option>
+            <option value="kompetitor">Kalah dengan Kompetitor</option>
+            <option value="hilang_kontak">Hilang Kontak / Prospect Unresponsive</option>
+            <option value="lainnya">Lainnya</option>
+          </select>
+        </div>
+
+        <div class="flex justify-end gap-3 pt-2">
+          <button type="button" onclick="closeClosedLostModal()" class="px-4 py-2 text-xs font-semibold text-gray-500 dark:text-[#98989d]">Batal</button>
+          <button type="submit" class="px-4 py-2 bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs rounded-full shadow-sm magnetic-btn">Simpan Closed Lost</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- DEAL EDIT / INSPECTOR MODAL + TIMELINE, PRESET CHIPS & VELOCITY METER -->
+  <div id="edit-deal-modal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="glass-panel rounded-2xl p-6 max-w-2xl w-full space-y-5 shadow-xl max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center  dark:border-[#38383a] pb-3">
+        <h3 class="text-base font-bold text-gray-900 dark:text-white font-headline flex items-center gap-2">
+          <span class="material-symbols-outlined text-indigo-500">edit_note</span>
+          Lead Inspector & Activity Log Timeline
+        </h3>
+        <button onclick="closeEditDealModal()" class="p-1 text-gray-400 hover:text-slate-900 dark:hover:text-white">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Form Section -->
+        <form id="edit-deal-form" onsubmit="handleSaveEditedDeal(event)" class="space-y-3.5">
+          <input type="hidden" id="edit-deal-id"/>
+          <div>
+            <label class="text-xs font-bold uppercase text-gray-600 dark:text-[#98989d]">Company / Deal Name</label>
+            <input type="text" id="edit-deal-title" required class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-[#38383a] rounded-2xl p-2.5 text-xs font-medium text-gray-900 dark:text-white mt-1"/>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="text-xs font-bold uppercase text-gray-600 dark:text-[#98989d]">Initial Value</label>
+              <input type="text" id="edit-deal-initial" inputmode="numeric" required oninput="formatCurrencyInput(this, 'edit-deal-initial-preview')" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-[#38383a] rounded-2xl p-2.5 text-xs font-medium text-gray-900 dark:text-white mt-1 font-mono-num focus:border-blue-500 focus:outline-none"/>
+              <p id="edit-deal-initial-preview" class="text-[11px] font-bold text-blue-600 dark:text-blue-400 mt-1 font-mono-num"></p>
+            </div>
+            <div>
+              <label class="text-xs font-bold uppercase text-gray-600 dark:text-[#98989d]">Current Value</label>
+              <input type="text" id="edit-deal-amount" inputmode="numeric" required oninput="formatCurrencyInput(this, 'edit-deal-amount-preview')" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-[#38383a] rounded-2xl p-2.5 text-xs font-medium text-gray-900 dark:text-white mt-1 font-mono-num focus:border-blue-500 focus:outline-none"/>
+              <p id="edit-deal-amount-preview" class="text-[11px] font-bold text-blue-600 dark:text-blue-400 mt-1 font-mono-num"></p>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="text-xs font-bold uppercase text-gray-600 dark:text-[#98989d]">Assignee</label>
+              <input type="text" id="edit-deal-rep" required class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-[#38383a] rounded-2xl p-2.5 text-xs font-medium text-gray-900 dark:text-white mt-1"/>
+            </div>
+            <div>
+              <label class="text-xs font-bold uppercase text-gray-600 dark:text-[#98989d]">Sumber Lead</label>
+              <select id="edit-deal-source" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-[#38383a] rounded-2xl p-2.5 text-xs font-medium text-gray-900 dark:text-white mt-1">
+                <option value="referral">Referral</option>
+                <option value="sosmed">Sosial Media</option>
+                <option value="cold_outreach">Cold Outreach</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label class="text-xs font-bold uppercase text-gray-600 dark:text-[#98989d]">Pipeline Stage</label>
+            <select id="edit-deal-stage" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-[#38383a] rounded-2xl p-2.5 text-xs font-medium text-gray-900 dark:text-white mt-1">
+              <option value="new-lead">New Lead</option>
+              <option value="contacted">Contacted</option>
+              <option value="proposal">Demo/Proposal</option>
+              <option value="negotiation">Negotiation</option>
+              <option value="closed-won">Closed Won</option>
+            </select>
+          </div>
+          <div class="flex justify-between items-center pt-3 border-t border-slate-100 dark:border-[#38383a]">
+            <button type="button" onclick="handleDeleteCurrentDeal()" class="px-3 py-1.5 bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-800/40 text-rose-600 dark:text-rose-400 font-bold text-xs rounded-full flex items-center gap-1 magnetic-btn">
+              <span class="material-symbols-outlined text-base">delete</span> Archive
+            </button>
+            <button type="submit" class="btn-primary-accent px-4 py-2 text-xs font-bold shadow-sm magnetic-btn">Save Changes</button>
+          </div>
+        </form>
+
+        <!-- Activity Log Timeline & Sales Velocity Section -->
+        <div class="space-y-4 border-l border-slate-100 dark:border-[#38383a] pl-4">
+          <!-- Sales Velocity Target Benchmark Meter -->
+          <div id="deal-velocity-meter"></div>
+
+          <h4 class="font-headline font-bold text-xs uppercase text-gray-600 dark:text-[#98989d] flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-sm">history</span> Activity Log Timeline
+          </h4>
+
+          <!-- Preset Log Chips -->
+          <div class="flex flex-wrap gap-1.5">
+            <button onclick="addPresetTimelineNote('📞 Call Prospect Selesai')" class="px-2.5 py-1 bg-slate-100 dark:bg-slate-800 hover:bg-blue-600 hover:text-white text-gray-700 dark:text-[#d1d1d6] rounded-full text-[11px] font-medium transition-all magnetic-btn">📞 Call Prospect</button>
+            <button onclick="addPresetTimelineNote('📧 Demo Proposal Sent')" class="px-2.5 py-1 bg-slate-100 dark:bg-slate-800 hover:bg-blue-600 hover:text-white text-gray-700 dark:text-[#d1d1d6] rounded-full text-[11px] font-medium transition-all magnetic-btn">📧 Send Proposal</button>
+            <button onclick="addPresetTimelineNote('🤝 Executive Meeting Result')" class="px-2.5 py-1 bg-slate-100 dark:bg-slate-800 hover:bg-blue-600 hover:text-white text-gray-700 dark:text-[#d1d1d6] rounded-full text-[11px] font-medium transition-all magnetic-btn">🤝 Exec Meeting</button>
+          </div>
+
+          <div class="space-y-3 max-h-[190px] overflow-y-auto text-xs" id="deal-timeline-container">
+            <!-- Rendered by app.js -->
+          </div>
+          <div class="pt-2">
+            <input type="text" id="new-timeline-note" placeholder="Tambah catatan aktivitas..." class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-[#38383a] rounded-2xl p-2.5 text-xs font-medium text-gray-900 dark:text-white placeholder-slate-400"/>
+            <button onclick="handleAddTimelineNote()" class="mt-2 w-full py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-full text-xs transition-all magnetic-btn">
+              + Tambah Catatan Aktivitas
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- POKA-YOKE DEFENSIVE UX MODAL -->
+  <div id="poka-yoke-modal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="glass-panel rounded-2xl border-slate-100 dark:border-[#38383a] p-6 max-w-lg w-full space-y-5 shadow-xl relative">
+      <div class="flex items-center gap-3  dark:border-[#38383a] pb-3">
+        <div class="w-9 h-9 rounded-full bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800/40 flex items-center justify-center text-blue-600">
+          <span class="material-symbols-outlined text-xl">warning</span>
+        </div>
+        <div>
+          <h3 class="text-base font-bold text-gray-900 dark:text-white font-headline">Operational Exception Warning</h3>
+          <p class="text-xs text-indigo-600 dark:text-indigo-400 font-semibold">Poka-Yoke Defensive UX Engine</p>
+        </div>
+      </div>
+
+      <div class="space-y-2.5 bg-slate-50 dark:bg-slate-900 p-3.5 rounded-2xl border border-slate-100 dark:border-[#38383a]">
+        <p class="text-xs font-bold text-amber-700 dark:text-indigo-400" id="poka-deal-name">Deal Exception: Budi (PT Maju Bersama)</p>
+        <p class="text-xs font-medium text-gray-600 dark:text-[#d1d1d6] leading-relaxed">
+          Deal has been inactive for <span class="text-gray-900 dark:text-white font-bold">8 consecutive days</span> in Negotiation stage. Sales velocity standards require follow-up within 5 days to prevent deal decay.
+        </p>
+      </div>
+
+      <div class="flex items-center justify-end gap-3 pt-1">
+        <button onclick="closePokaYokeModal()" class="px-4 py-2 text-xs font-semibold text-gray-500 dark:text-[#98989d] hover:text-slate-900 dark:hover:text-white magnetic-btn">Dismiss</button>
+        <button onclick="executeAutoFix()" class="btn-primary-accent px-4 py-2 text-xs font-bold flex items-center gap-1.5 shadow-sm magnetic-btn">
+          <span class="material-symbols-outlined text-base">auto_fix_high</span> ✨ Auto-Fix & Send 5% Discount
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- NEW DEAL WIZARD MODAL -->
+  <div id="new-deal-modal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="glass-panel rounded-2xl p-6 max-w-md w-full space-y-5 shadow-xl">
+      <div class="flex justify-between items-center  dark:border-[#38383a] pb-3">
+        <h3 class="text-base font-bold text-gray-900 dark:text-white font-headline">Create New Lead Opportunity</h3>
+        <button onclick="closeNewDealModal()" class="p-1 text-gray-400 hover:text-slate-900 dark:hover:text-white">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <form id="new-deal-form" onsubmit="handleCreateDeal(event)" class="space-y-3.5">
+        <div>
+          <label class="text-xs font-bold uppercase text-gray-600 dark:text-[#98989d]">Perusahaan / Contact Name</label>
+          <input type="text" id="deal-title" required placeholder="e.g. PT Telkomsel Enterprise" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-[#38383a] rounded-2xl p-2.5 text-xs font-medium text-gray-900 dark:text-white mt-1 focus:border-blue-500 focus:outline-none"/>
+        </div>
+        <div>
+          <label class="text-xs font-bold uppercase text-gray-600 dark:text-[#98989d]">Estimated Deal Value</label>
+          <input type="text" id="deal-amount" inputmode="numeric" required placeholder="e.g. 50.000.000" oninput="formatCurrencyInput(this, 'deal-amount-preview')" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-[#38383a] rounded-2xl p-2.5 text-xs font-medium text-gray-900 dark:text-white mt-1 focus:border-blue-500 focus:outline-none font-mono-num"/>
+          <p id="deal-amount-preview" class="text-[11px] font-bold text-blue-600 dark:text-blue-400 mt-1 font-mono-num"></p>
+        </div>
+        <div>
+          <label class="text-xs font-bold uppercase text-gray-600 dark:text-[#98989d]">Sumber Lead</label>
+          <select id="deal-source" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-[#38383a] rounded-2xl p-2.5 text-xs font-medium text-gray-900 dark:text-white mt-1">
+            <option value="referral">Referral</option>
+            <option value="sosmed">Sosial Media</option>
+            <option value="cold_outreach">Cold Outreach</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-xs font-bold uppercase text-gray-600 dark:text-[#98989d]">Pipeline Stage</label>
+          <select id="deal-stage" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-[#38383a] rounded-2xl p-2.5 text-xs font-medium text-gray-900 dark:text-white mt-1 focus:border-blue-500 focus:outline-none">
+            <option value="new-lead">New Lead</option>
+            <option value="contacted">Contacted</option>
+            <option value="proposal">Demo/Proposal</option>
+            <option value="negotiation">Negotiation</option>
+          </select>
+        </div>
+        <div class="flex justify-end gap-3 pt-3">
+          <button type="button" onclick="closeNewDealModal()" class="px-4 py-2 text-xs font-semibold text-gray-500 dark:text-[#98989d] hover:text-slate-900 dark:hover:text-white magnetic-btn">Cancel</button>
+          <button type="submit" class="btn-primary-accent px-4 py-2 text-xs font-bold shadow-sm magnetic-btn">Create Lead</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toast-notification" class="fixed bottom-6 right-6 bg-slate-900/90 backdrop-blur-md text-white border border-slate-700/50 px-4 py-3 rounded-2xl shadow-2xl hidden items-center gap-3 z-50 transition-all duration-300 transform translate-y-4 opacity-0 pointer-events-none">
+    <span class="material-symbols-outlined text-blue-400 text-xl" id="toast-icon">check_circle</span>
+    <span class="text-sm font-semibold tracking-wide" id="toast-msg">Action completed</span>
+  </div>
+
+  <!-- Watermark -->
+  <div class="fixed bottom-4 right-6 text-slate-800 dark:text-white font-bold text-xs uppercase tracking-widest opacity-20 pointer-events-none select-none z-50">
+    DEMO ALDY ALFARISY
+  </div>
+
+  <script src="app.js?v=20260729_0208" defer></script>
+</body>
+</html>
+
+

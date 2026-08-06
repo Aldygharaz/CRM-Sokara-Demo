@@ -1,0 +1,684 @@
+/* ============================================================
+   Sokara CRM — Design System
+   Font: DM Sans (body + headline + all inputs/buttons) + JetBrains Mono (numbers)
+   Palette: Slate Neutral + Pure Blue Accent (RYVEN-inspired dark)
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+/* ---- DESIGN TOKENS ---- */
+:root {
+  --font-headline: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body:     'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono:     'JetBrains Mono', monospace;
+
+  /* Accent: Soft Calming Blue (Healthcare/Wellness vibe) */
+  --accent:        #3b82f6;   /* Blue-500 */
+  --accent-hover:  #2563eb;   /* Blue-600 */
+  --accent-light:  #eff6ff;   /* Blue-50  */
+  --accent-border: #bfdbfe;   /* Blue-200 */
+  --accent-text:   #1d4ed8;   /* Blue-700 */
+
+  /* Light mode surface tokens - Apple HIG Default */
+  --bg-page:       #F2F2F7;   /* Apple system light gray */
+  --bg-sidebar:    rgba(255, 255, 255, 0.7); /* Subtle blur base */
+  --bg-card:       #ffffff;   /* Pure white cards */
+  --bg-card-hover: #fafafa;   
+  --border:        #e5e5ea;   /* Apple subtle border */
+  --border-focus:  #007aff;   /* Apple blue */
+
+  /* Typography — softer contrast, friendly */
+  --text-high:   #1c1c1e;   /* Apple dark text */
+  --text-mid:    #3a3a3c;   
+  --text-low:    #8e8e93;   /* Apple secondary */
+  --text-muted:  #aeaeb2;   /* Apple tertiary */
+  
+  /* Semantic colors (Apple HIG strict) */
+  --success:  #34C759;
+  --warning:  #FF9500;
+  --danger:   #FF3B30;
+
+  /* Apple flat/subtle shadows (Anti-slop) */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+html.dark {
+  /* Accent — Discord Electron Blue */
+  --accent:        #0984E3;
+  --accent-hover:  #0097E6;
+  --accent-light:  rgba(9, 132, 227, 0.12);
+  --accent-border: rgba(9, 132, 227, 0.25);
+  --accent-text:   #0984E3;
+
+  /* ─── Discord Warm Gray Palette ────────────────────── */
+  --bg-page:       #1E1F22;   /* base (outer) */
+  --bg-sidebar:    #2B2D31;   /* sidebar */
+  --bg-card:       #313338;   /* canvas (card surface) */
+  --bg-card-hover: #383A40;   /* elevated (hover/input) */
+  --border:        #3F4147;   /* divider / border */
+  --border-focus:  #0984E3;
+
+  --text-high:   #F2F3F5;   /* Primary white/gray */
+  --text-mid:    #DBDEE1;   /* Secondary */
+  --text-low:    #B5BAC1;   /* Muted */
+  --text-muted:  #80848E;   /* Disabled */
+
+  /* Semantic — Discord specs */
+  --success:  #23A559;
+  --warning:  #F0B232;
+  --danger:   #F23F43;
+
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.6);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.7);
+}
+
+/* ---- RESET & UNIVERSAL FONT INHERITANCE ---- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body, button, input, select, textarea, option, kbd {
+  font-family: var(--font-body);
+}
+
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined' !important;
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--bg-page);
+  color: var(--text-high);
+  min-height: 100vh;
+  overflow-x: hidden;
+  letter-spacing: -0.006em;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* ---- CUSTOM SCROLLBARS ---- */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent; 
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.4); 
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(107, 114, 128, 0.6); 
+}
+html.dark ::-webkit-scrollbar-thumb {
+  background: rgba(99, 99, 102, 0.4); 
+}
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(152, 152, 157, 0.6); 
+}
+
+/* ---- FOCUS ACCESSIBILITY ---- */
+*:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px var(--accent-light);
+}
+html.dark *:focus-visible {
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+}
+
+h1, h2, h3, h4, .font-headline {
+  font-family: var(--font-headline);
+  font-weight: 700;
+  letter-spacing: -0.018em;
+  line-height: 1.25;
+  text-wrap: balance;
+  color: var(--text-high);
+}
+
+.font-mono-num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+/* ---- CANVAS OVERLAYS ---- */
+#ambient-canvas {
+  position: fixed; top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  pointer-events: none; z-index: 0; opacity: 0.08;
+}
+#confetti-canvas {
+  position: fixed; top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  pointer-events: none; z-index: 60;
+}
+
+/* ---- SURFACE / CARD ---- */
+.glass-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.glass-panel-accent {
+  background: var(--bg-card);
+  border: 1px solid var(--accent-border);
+  border-radius: 16px;
+  box-shadow: var(--shadow-sm);
+}
+
+/* ---- 3D INTERACTIVE TILT & SPOTLIGHT CARDS ---- */
+.interactive-tilt-card {
+  perspective: 1000px;
+  transform-style: preserve-3d;
+  transition: transform 0.15s cubic-bezier(0.2, 0, 0.2, 1), box-shadow 0.2s ease, border-color 0.2s ease;
+  will-change: transform;
+  position: relative;
+  overflow: hidden;
+}
+
+.interactive-tilt-card::before {
+  content: '';
+  position: absolute;
+  top: var(--spotlight-y, -100%);
+  left: var(--spotlight-x, -100%);
+  width: 260px;
+  height: 260px;
+  background: radial-gradient(circle, rgba(37, 99, 235, 0.14) 0%, rgba(37, 99, 235, 0) 70%);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.interactive-tilt-card:hover::before {
+  opacity: 1;
+}
+
+.interactive-tilt-card:hover {
+  transform: perspective(1000px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg)) scale3d(1.015, 1.015, 1.015);
+  box-shadow: 0 12px 30px -8px rgba(0, 0, 0, 0.1);
+  border-color: var(--accent-border);
+}
+
+html.dark .interactive-tilt-card:hover {
+  box-shadow: 0 12px 30px -8px rgba(0, 0, 0, 0.5);
+  border-color: rgba(59, 130, 246, 0.4);
+}
+
+/* Magnetic Button Hover Attractor */
+.magnetic-btn {
+  transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+  will-change: transform;
+}
+
+/* Scroll Reveal Fade-Up Stagger */
+.scroll-reveal-item {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.scroll-reveal-item.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ---- BUTTONS ---- */
+
+/* Primary — filled indigo */
+.btn-primary-accent {
+  display: inline-flex;
+  align-items: center;
+  background: var(--accent);
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 13px;
+  border-radius: 9999px;
+  border: none;
+  padding: 6px 14px;
+  cursor: pointer;
+  gap: 6px;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+.btn-primary-accent:hover {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+}
+.btn-primary-accent:active { transform: translateY(0) scale(0.98); }
+
+html.dark .btn-primary-accent {
+  background: #2563eb;
+}
+html.dark .btn-primary-accent:hover {
+  background: #1d4ed8;
+}
+
+/* Ghost / secondary button */
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  background: var(--bg-card);
+  color: var(--text-mid);
+  font-weight: 500;
+  font-size: 13px;
+  border-radius: 9999px;
+  border: 1px solid var(--border);
+  padding: 6px 12px;
+  cursor: pointer;
+  gap: 6px;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.btn-ghost:hover {
+  background: var(--bg-card-hover);
+  color: var(--text-high);
+  border-color: #d1d5db;
+}
+
+/* ---- NAVIGATION ---- */
+.nav-link {
+  transition: background-color 0.12s ease, color 0.12s ease;
+  color: var(--text-low);
+  border-radius: 8px;
+}
+.nav-link:hover {
+  background: var(--bg-card-hover);
+  color: var(--text-high);
+}
+.nav-link.active {
+  background: var(--accent-light);
+  color: var(--accent-text);
+  font-weight: 700;
+}
+html.dark .nav-link.active {
+  background: rgba(37, 99, 235, 0.14);
+  color: #3b82f6;
+  border: 1px solid rgba(59, 130, 246, 0.25);
+}
+
+/* ---- TILT CARD ---- */
+.tilt-card {
+  position: relative;
+  will-change: transform;
+  transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.18s ease,
+              border-color 0.15s ease;
+}
+.tilt-card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--accent-border) !important;
+}
+
+/* ---- MICRO INTERACTION ---- */
+.magnetic-btn {
+  transition: transform 0.12s ease, opacity 0.12s ease;
+  cursor: pointer;
+}
+.magnetic-btn:hover  { transform: translateY(-1px); }
+.magnetic-btn:active { transform: translateY(0) scale(0.97); }
+
+/* Table Row Hover Polish */
+.table-row-hover {
+  transition: background-color 0.15s ease;
+}
+.table-row-hover:hover {
+  background-color: #f1f5f9;
+}
+html.dark .table-row-hover:hover {
+  background-color: #2c2c2e !important;
+}
+
+/* ---- HEALTH PULSE (Disabled) ---- */
+.health-pulse { position: relative; }
+
+/* ---- STATUS PILL BADGES ---- */
+.pill-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 9px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  transition: all 0.2s ease;
+}
+
+#ambient-canvas {
+  position: fixed; top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  pointer-events: none; z-index: 0; opacity: 0.08;
+}
+#confetti-canvas {
+  position: fixed; top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  pointer-events: none; z-index: 60;
+}
+
+/* ---- SURFACE / CARD ---- */
+.glass-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.glass-panel-accent {
+  background: var(--bg-card);
+  border: 1px solid var(--accent-border);
+  border-radius: 16px;
+  box-shadow: var(--shadow-sm);
+}
+
+/* ---- 3D INTERACTIVE TILT & SPOTLIGHT CARDS ---- */
+.interactive-tilt-card {
+  perspective: 1000px;
+  transform-style: preserve-3d;
+  transition: transform 0.15s cubic-bezier(0.2, 0, 0.2, 1), box-shadow 0.2s ease, border-color 0.2s ease;
+  will-change: transform;
+  position: relative;
+  overflow: hidden;
+}
+
+.interactive-tilt-card::before {
+  content: '';
+  position: absolute;
+  top: var(--spotlight-y, -100%);
+  left: var(--spotlight-x, -100%);
+  width: 260px;
+  height: 260px;
+  background: radial-gradient(circle, rgba(37, 99, 235, 0.14) 0%, rgba(37, 99, 235, 0) 70%);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.interactive-tilt-card:hover::before {
+  opacity: 1;
+}
+
+.interactive-tilt-card:hover {
+  transform: perspective(1000px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg)) scale3d(1.015, 1.015, 1.015);
+  box-shadow: 0 12px 30px -8px rgba(0, 0, 0, 0.1);
+  border-color: var(--accent-border);
+}
+
+html.dark .interactive-tilt-card:hover {
+  box-shadow: 0 12px 30px -8px rgba(0, 0, 0, 0.5);
+  border-color: rgba(59, 130, 246, 0.4);
+}
+
+/* Magnetic Button Hover Attractor */
+.magnetic-btn {
+  transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+  will-change: transform;
+}
+
+/* Scroll Reveal Fade-Up Stagger */
+.scroll-reveal-item {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.scroll-reveal-item.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ---- BUTTONS ---- */
+
+/* Primary — filled indigo */
+.btn-primary-accent {
+  display: inline-flex;
+  align-items: center;
+  background: var(--accent);
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 13px;
+  border-radius: 9999px;
+  border: none;
+  padding: 6px 14px;
+  cursor: pointer;
+  gap: 6px;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+.btn-primary-accent:hover {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+}
+.btn-primary-accent:active { transform: translateY(0) scale(0.98); }
+
+html.dark .btn-primary-accent {
+  background: #2563eb;
+}
+html.dark .btn-primary-accent:hover {
+  background: #1d4ed8;
+}
+
+/* Ghost / secondary button */
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  background: var(--bg-card);
+  color: var(--text-mid);
+  font-weight: 500;
+  font-size: 13px;
+  border-radius: 9999px;
+  border: 1px solid var(--border);
+  padding: 6px 12px;
+  cursor: pointer;
+  gap: 6px;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.btn-ghost:hover {
+  background: var(--bg-card-hover);
+  color: var(--text-high);
+  border-color: #d1d5db;
+}
+
+/* ---- NAVIGATION ---- */
+.nav-link {
+  transition: background-color 0.12s ease, color 0.12s ease;
+  color: var(--text-low);
+  border-radius: 8px;
+}
+.nav-link:hover {
+  background: var(--bg-card-hover);
+  color: var(--text-high);
+}
+.nav-link.active {
+  background: var(--accent-light);
+  color: var(--accent-text);
+  font-weight: 700;
+}
+html.dark .nav-link.active {
+  background: rgba(37, 99, 235, 0.14);
+  color: #3b82f6;
+  border: 1px solid rgba(59, 130, 246, 0.25);
+}
+
+/* ---- TILT CARD ---- */
+.tilt-card {
+  position: relative;
+  will-change: transform;
+  transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.18s ease,
+              border-color 0.15s ease;
+}
+.tilt-card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--accent-border) !important;
+}
+
+/* ---- MICRO INTERACTION ---- */
+.magnetic-btn {
+  transition: transform 0.12s ease, opacity 0.12s ease;
+  cursor: pointer;
+}
+.magnetic-btn:hover  { transform: translateY(-1px); }
+.magnetic-btn:active { transform: translateY(0) scale(0.97); }
+
+/* Table Row Hover Polish */
+.table-row-hover {
+  transition: background-color 0.15s ease;
+}
+.table-row-hover:hover {
+  background-color: #f1f5f9;
+}
+html.dark .table-row-hover:hover {
+  background-color: #2c2c2e !important;
+}
+
+/* ---- HEALTH PULSE (Disabled) ---- */
+.health-pulse { position: relative; }
+
+/* ---- STATUS PILL BADGES ---- */
+.pill-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 9px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  transition: all 0.2s ease;
+}
+.pill-badge:hover {
+  transform: translateY(-1px);
+  filter: brightness(0.95);
+}
+
+/* Green - success / closed won / healthy */
+.pill-badge-green {
+  background: color-mix(in srgb, var(--success) 15%, transparent);
+  color: var(--success);
+  border: 1px solid transparent;
+}
+
+/* Indigo - score / info / neutral highlight */
+.pill-badge-indigo {
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
+  color: var(--accent);
+  border: 1px solid transparent;
+}
+
+/* Yellow - warning / stale / in-progress */
+.pill-badge-yellow {
+  background: color-mix(in srgb, var(--warning) 15%, transparent);
+  color: var(--warning);
+  border: 1px solid transparent;
+}
+
+/* Red - lost / danger */
+.pill-badge-red {
+  background: color-mix(in srgb, var(--danger) 15%, transparent);
+  color: var(--danger);
+  border: 1px solid transparent;
+}
+
+/* ---- TIMELINE ---- */
+.timeline-item {
+  position: relative;
+  padding-left: 22px;
+}
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: 4px; top: 6px;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.timeline-item::after {
+  content: '';
+  position: absolute;
+  left: 7px; top: 17px; bottom: -12px;
+  width: 2px;
+  background: var(--border);
+}
+.timeline-item:last-child::after { display: none; }
+
+/* ---- SCROLLBAR ---- */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 9999px; }
+html.dark ::-webkit-scrollbar-thumb { background: #4b5563; }
+::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
+
+/* ---- RANGE SLIDER ---- */
+.slider-custom {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 9999px;
+  background: #e2e8f0;
+  outline: none;
+}
+html.dark .slider-custom {
+  background: #2c2c2e;
+}
+.slider-custom::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid #cbd5e1;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+  cursor: pointer;
+  transition: border-color 0.12s ease, transform 0.12s ease;
+}
+html.dark .slider-custom::-webkit-slider-thumb {
+  background: #2c2c2e;
+  border-color: #48484a;
+}
+.slider-custom::-webkit-slider-thumb:hover {
+  border-color: var(--accent);
+  transform: scale(1.1);
+}
+
+/* ---- VIEW PANES (Smooth Tab Switching) ---- */
+@keyframes viewPaneEnter {
+  0% { opacity: 0; transform: translateY(8px) scale(0.995); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+.view-pane {
+  display: none;
+}
+.view-pane.active {
+  display: block;
+  animation: viewPaneEnter 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+
+/* ---- SEMANTIC TEXT UTILITIES ---- */
+.text-success { color: var(--success); }
+.text-warning { color: var(--warning); }
+.text-danger { color: var(--danger); }
+
+

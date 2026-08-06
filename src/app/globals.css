@@ -1,0 +1,85 @@
+@import "tailwindcss";
+
+@theme {
+  --color-base: var(--color-base-val);
+  --color-sidebar: var(--color-sidebar-val);
+  --color-canvas: var(--color-canvas-val);
+  --color-elevated: var(--color-elevated-val);
+  --color-hover: var(--color-hover-val);
+
+  --color-text-primary: var(--color-text-primary-val);
+  --color-text-secondary: var(--color-text-secondary-val);
+  --color-text-muted: var(--color-text-muted-val);
+  
+  --color-border-divider: var(--color-border-divider-val);
+  --color-border-input: var(--color-border-input-val);
+
+  --color-brand: var(--color-brand-val);
+  --color-brand-hover: var(--color-brand-hover-val);
+
+  --color-success: var(--color-success-val);
+  --color-warning: var(--color-warning-val);
+  --color-danger: var(--color-danger-val);
+}
+
+:root {
+  /* LIGHT MODE (Apple HIG Base) */
+  --color-base-val: #F2F2F7;
+  --color-sidebar-val: #E5E5EA;
+  --color-canvas-val: #F9F9FB;
+  --color-elevated-val: #FFFFFF;
+  --color-hover-val: #F2F2F7;
+
+  --color-text-primary-val: #1C1C1E;
+  --color-text-secondary-val: #3A3A3C;
+  --color-text-muted-val: #8E8E93;
+  
+  --color-border-divider-val: #D1D1D6;
+  --color-border-input-val: #C7C7CC;
+
+  --color-brand-val: #007AFF;
+  --color-brand-hover-val: #0056B3;
+
+  --color-success-val: #34C759;
+  --color-warning-val: #FF9500;
+  --color-danger-val: #FF3B30;
+}
+
+.dark {
+  /* DARK MODE (Discord Palette) */
+  --color-base-val: #1E1F22;
+  --color-sidebar-val: #2B2D31;
+  --color-canvas-val: #313338;
+  --color-elevated-val: #383A40;
+  --color-hover-val: #404249;
+
+  --color-text-primary-val: #F2F3F5;
+  --color-text-secondary-val: #DBDEE1;
+  --color-text-muted-val: #B5BAC1;
+  
+  --color-border-divider-val: rgba(255, 255, 255, 0.06);
+  --color-border-input-val: #232428;
+
+  --color-brand-val: #0984E3;
+  --color-brand-hover-val: #0097E6;
+
+  --color-success-val: #23A559;
+  --color-warning-val: #F0B232;
+  --color-danger-val: #F23F43;
+}
+
+@layer base {
+  body {
+    @apply bg-base text-text-primary font-sans antialiased;
+  }
+}
+
+@layer components {
+  .glass-panel {
+    @apply bg-canvas/80 backdrop-blur-xl border-border-divider;
+  }
+  
+  .card {
+    @apply bg-elevated rounded-2xl border border-border-divider shadow-sm transition-all duration-300;
+  }
+}
