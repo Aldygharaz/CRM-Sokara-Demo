@@ -8,6 +8,7 @@ import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { Building2, UserCircle, DollarSign, TrendingUp, TrendingDown } from "lucide-react";
 import InteractiveTiltCard from "@/components/ui/InteractiveTiltCard";
+import { motion, AnimatePresence } from "framer-motion";
 
 function cn(...inputs: (string | undefined | null | false)[]) {
   return twMerge(clsx(inputs));
@@ -46,9 +47,11 @@ function DealCard({ deal, isDragging, onClick }: { deal: Deal; isDragging?: bool
     <InteractiveTiltCard
       onClick={onClick}
       className={cn(
-        "bg-elevated border rounded-xl p-4 flex flex-col gap-3 cursor-pointer",
-        isDragging ? "opacity-90 border-brand shadow-[0_10px_40px_rgba(0,122,255,0.2)] scale-105 z-50 ring-2 ring-brand/50" : "border-border-divider shadow-sm hover:border-border-input hover:shadow-md",
-        isStale && !isDragging && "border-danger/30 bg-danger/5"
+        "bg-elevated border rounded-xl p-4 flex flex-col gap-3 cursor-pointer transition-all duration-300",
+        isDragging ? "opacity-0" : "border-border-divider shadow-sm hover:border-border-input hover:shadow-md",
+        isStale && !isDragging && "border-danger/30 bg-danger/5",
+        deal.stage === 'lost' && !isDragging && "grayscale opacity-70 border-border-divider",
+        deal.stage === 'won' && !isDragging && "border-success/50 shadow-[0_0_15px_rgba(52,199,89,0.15)] ring-1 ring-success/20 bg-success/5"
       )}
     >
       <div className="flex justify-between items-start gap-2">
@@ -108,22 +111,36 @@ function SortableDealCard({ deal, onClick }: { deal: Deal; onClick?: () => void 
   };
 
   return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners} className="touch-none cursor-grab active:cursor-grabbing">
+    <motion.div
+      layout
+      initial={{ opacity: 0, scale: 0.9, y: 10 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.9, y: -10, transition: { duration: 0.15 } }}
+      transition={{ type: "spring", stiffness: 400, damping: 25 }}
+      ref={setNodeRef} 
+      style={style} 
+      {...attributes} 
+      {...listeners} 
+      className="touch-none cursor-grab active:cursor-grabbing"
+    >
       <DealCard deal={deal} isDragging={isDragging} onClick={onClick} />
-    </div>
+    </motion.div>
   );
 }
 
 // Droppable Column Wrapper
 function DroppableColumn({ stage, stageDeals, stageTotal, onDealClick, index }: { stage: typeof STAGES[0], stageDeals: Deal[], stageTotal: number, onDealClick?: (deal: Deal) => void, index: number }) {
-  const { setNodeRef } = useDroppable({
+  const { setNodeRef, isOver } = useDroppable({
     id: stage.id,
     data: { type: 'Stage', stage }
   });
 
   return (
     <div 
-      className="flex flex-col flex-shrink-0 w-80 bg-base rounded-2xl border border-border-divider overflow-hidden h-full animate-in fade-in slide-in-from-bottom-4 duration-500"
+      className={cn(
+        "flex flex-col flex-shrink-0 w-80 bg-base rounded-2xl border overflow-hidden h-full animate-in fade-in slide-in-from-bottom-4 duration-500 transition-colors",
+        isOver ? "border-brand bg-brand/5 shadow-[0_0_20px_rgba(0,122,255,0.15)] ring-1 ring-brand/20" : "border-border-divider"
+      )}
       style={{ animationFillMode: "both", animationDelay: `${index * 100}ms` }}
     >
       {/* Header */}
@@ -148,14 +165,23 @@ function DroppableColumn({ stage, stageDeals, stageTotal, onDealClick, index }: 
       <div ref={setNodeRef} className="flex-1 p-3 overflow-y-auto min-h-[150px]">
         <SortableContext id={stage.id} items={stageDeals.map(d => d.id)} strategy={verticalListSortingStrategy}>
           <div className="flex flex-col gap-3 min-h-full">
-            {stageDeals.map(deal => (
-              <SortableDealCard key={deal.id} deal={deal} onClick={() => onDealClick?.(deal)} />
-            ))}
-            {stageDeals.length === 0 && (
-              <div className="flex-1 min-h-[100px] border-2 border-dashed border-brand/40 animate-pulse rounded-xl flex items-center justify-center text-xs text-brand font-medium bg-brand/5 pointer-events-none">
-                Drop deals here
-              </div>
-            )}
+            <AnimatePresence mode="popLayout">
+              {stageDeals.map(deal => (
+                <SortableDealCard key={deal.id} deal={deal} onClick={() => onDealClick?.(deal)} />
+              ))}
+            </AnimatePresence>
+            <AnimatePresence>
+              {stageDeals.length === 0 && (
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.95 }} 
+                  animate={{ opacity: 1, scale: 1 }} 
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  className="flex-1 min-h-[100px] border-2 border-dashed border-brand/40 animate-pulse rounded-xl flex items-center justify-center text-xs text-brand font-medium bg-brand/5 pointer-events-none"
+                >
+                  Drop deals here
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </SortableContext>
       </div>
@@ -221,8 +247,12 @@ export function KanbanBoard({ deals, onDealMove, onDealClick }: KanbanBoardProps
       </div>
 
       {/* Drag Overlay for smooth animation */}
-      <DragOverlay>
-        {activeDeal ? <DealCard deal={activeDeal} isDragging /> : null}
+      <DragOverlay dropAnimation={null}>
+        {activeDeal ? (
+          <div className="opacity-100 scale-105 rotate-2 z-[100] drop-shadow-2xl">
+            <DealCard deal={activeDeal} />
+          </div>
+        ) : null}
       </DragOverlay>
     </DndContext>
   );

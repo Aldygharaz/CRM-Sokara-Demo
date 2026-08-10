@@ -32,16 +32,18 @@ export function Sidebar() {
     >
       {/* Brand */}
       <div className="flex items-center h-16 px-4 border-b border-border-divider shrink-0 overflow-hidden">
-        <div className="w-8 h-8 rounded-lg bg-brand flex items-center justify-center shrink-0">
-          <span className="text-white font-bold text-lg leading-none">S</span>
+        <div className="w-8 h-8 flex items-center justify-center shrink-0">
+          <img src="/sokara-logomark-transparent-dark.svg" alt="Sokara Logo" className="w-8 h-8 dark:hidden" />
+          <img src="/sokara-logomark-transparent-light.svg" alt="Sokara Logo" className="w-8 h-8 hidden dark:block" />
         </div>
         <span
           className={cn(
-            "ml-3 font-semibold text-lg text-text-primary whitespace-nowrap transition-opacity duration-300",
+            "ml-3 font-semibold text-lg text-text-primary whitespace-nowrap transition-opacity duration-300 tracking-[1px]",
             !isSidebarOpen && "opacity-0"
           )}
+          style={{ fontFamily: 'var(--font-poppins)' }}
         >
-          Sokara CRM
+          Sokara <span className="font-normal opacity-70">CRM</span>
         </span>
       </div>
 

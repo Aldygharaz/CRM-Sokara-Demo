@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Poppins } from "next/font/google";
 import "./globals.css";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { Header } from "@/components/layout/Header";
 import { AuthWrapper } from "@/components/layout/AuthWrapper";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
+import { Toaster } from "sonner";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"], variable: '--font-inter' });
+export const poppins = Poppins({ weight: ["600"], subsets: ["latin"], variable: '--font-poppins' });
 
 export const metadata: Metadata = {
   title: "Sokara CRM",
@@ -19,7 +21,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.className} h-full antialiased`}>
+    <html lang="en" className={`${inter.variable} ${poppins.variable} ${inter.className} h-full antialiased`}>
       <body className="h-full flex overflow-hidden">
         {/* Background Base */}
         <ThemeProvider />
@@ -42,6 +44,9 @@ export default function RootLayout({
             </main>
           </div>
         </AuthWrapper>
+        
+        {/* Global Toast Notifications */}
+        <Toaster position="bottom-right" richColors theme="system" />
       </body>
     </html>
   );

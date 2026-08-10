@@ -1,23 +1,31 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { useStore } from "@/store/useStore";
 import { getDeals, updateDealStage } from "../actions/deals";
 import { KanbanBoard, Deal } from "@/components/deals/KanbanBoard";
-import { Plus, Wifi, WifiOff, FilterX } from "lucide-react";
+import { Plus, Wifi, WifiOff, FilterX, Trophy, TrendingDown } from "lucide-react";
 import PokaYokeModal from "@/components/ui/PokaYokeModal";
 import { DealInspector } from "@/components/deals/DealInspector";
 import { NewDealModal } from "@/components/deals/NewDealModal";
+import useSWR from "swr";
+import { toast } from "sonner";
+import { motion } from "framer-motion";
 
 export default function DealsPage() {
-  const { language, currentUser } = useStore();
-  const [deals, setDeals] = useState<Deal[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const { language, currentUser, globalSearchQuery } = useStore();
+  
+  const { data: deals = [], mutate, isLoading } = useSWR<Deal[]>(
+    currentUser ? `deals-${currentUser.id}` : null,
+    () => getDeals(currentUser!.id, currentUser!.role) as Promise<Deal[]>,
+    { fallbackData: [], revalidateOnFocus: true }
+  );
+
   const [inspectingDeal, setInspectingDeal] = useState<Deal | null>(null);
   const [isNewDealOpen, setIsNewDealOpen] = useState(false);
   
   // Offline & Sync Queue State
-  const [isOnline, setIsOnline] = useState(true);
+  const [isOnline, setIsOnline] = useState(typeof navigator !== 'undefined' ? navigator.onLine : true);
   const [syncQueue, setSyncQueue] = useState<{id: string, stage: string}[]>([]);
 
   // Filter State
@@ -26,27 +34,13 @@ export default function DealsPage() {
   // Poka-Yoke State
   const [pokaYoke, setPokaYoke] = useState<{isOpen: boolean, dealId?: string, targetStage?: string}>({ isOpen: false });
 
-  const fetchDeals = useCallback(() => {
-    if (!currentUser) return;
-    setIsLoading(true);
-    getDeals(currentUser.id, currentUser.role).then((data) => {
-      setDeals(data as Deal[]);
-      setIsLoading(false);
-    }).catch(err => {
-      console.error(err);
-      setIsLoading(false);
-    });
-  }, [currentUser]);
-
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    fetchDeals();
 
     // Setup Offline/Online Listeners
     const handleOnline = () => setIsOnline(true);
     const handleOffline = () => setIsOnline(false);
     
-    setIsOnline(navigator.onLine);
+    
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
     
@@ -58,13 +52,12 @@ export default function DealsPage() {
       }
     };
     window.addEventListener('keydown', handleKeyDown);
-    
     return () => {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [fetchDeals]);
+  }, []);
 
   // Sync Queue Processor
   useEffect(() => {
@@ -86,29 +79,49 @@ export default function DealsPage() {
   const handleDealMove = async (dealId: string, newStage: string) => {
     const deal = deals.find(d => d.id === dealId);
     
+    // Optimistic Update First (UX feels instant)
+    const optimisticDeals = deals.map(d => d.id === dealId ? { ...d, stage: newStage, staleDays: 0 } : d);
+    mutate(optimisticDeals, false);
+    
     // POKA-YOKE: Cegah deal pindah ke Won/Lost jika data perusahaan kosong atau stale > 30 hari
     if (deal && deal.staleDays > 30 && (newStage === 'won' || newStage === 'lost')) {
       setPokaYoke({ isOpen: true, dealId, targetStage: newStage });
-      return; // Block movement
+      return; // Stop execution, await PokaYoke resolution
     }
 
     executeMove(dealId, newStage);
   };
 
   const executeMove = async (dealId: string, newStage: string) => {
-    // Optimistic Update
-    setDeals((prev) => prev.map(d => d.id === dealId ? { ...d, stage: newStage, staleDays: 0 } : d));
-
     if (!isOnline) {
       setSyncQueue(prev => [...prev, { id: dealId, stage: newStage }]);
+      toast.info('Disimpan secara offline. Akan disinkronkan saat koneksi kembali.');
       return;
     }
 
     try {
       await updateDealStage(dealId, newStage as 'new' | 'contacted' | 'proposal' | 'negotiation' | 'won' | 'lost');
+      
+      if (newStage === 'won') {
+        toast.success(language === 'id' ? 'Deal Dimenangkan! Luar biasa!' : 'Deal Won! Outstanding!', {
+          description: language === 'id' ? 'Berhasil mengamankan deal ini ke tahap akhir.' : 'Successfully secured this deal to the final stage.',
+          icon: <Trophy className="w-5 h-5 text-warning" />,
+          duration: 5000,
+        });
+      } else if (newStage === 'lost') {
+        toast(language === 'id' ? 'Deal Hilang' : 'Deal Lost', {
+          description: language === 'id' ? 'Jangan menyerah, evaluasi dan coba lagi!' : 'Don\'t give up, evaluate and try again!',
+          icon: <TrendingDown className="w-5 h-5 text-danger" />,
+        });
+      } else {
+        toast.success(language === 'id' ? 'Status deal berhasil diperbarui!' : 'Deal stage updated successfully!');
+      }
+      
+      mutate(); // Revalidate from source
     } catch (error) {
       console.error("Failed to update deal", error);
-      fetchDeals(); // Revert
+      toast.error(language === 'id' ? 'Gagal memperbarui status deal.' : 'Failed to update deal stage.');
+      mutate(); // Revert to original
     }
   };
 
@@ -126,7 +139,7 @@ export default function DealsPage() {
 
   if (!currentUser) return null;
 
-  const { globalSearchQuery } = useStore();
+  // globalSearchQuery is extracted at the top to satisfy Rules of Hooks
 
   const filteredDeals = deals.filter(deal => {
     // Apply global search filter
@@ -172,19 +185,29 @@ export default function DealsPage() {
         </button>
       </div>
 
-      {/* Preset Filter Chips */}
+      {/* Preset Filter Chips with Framer Motion Layout */}
       <div className="flex items-center gap-2 shrink-0">
         {(['all', 'my-deals', 'stale', 'high-value'] as const).map(filter => (
           <button
             key={filter}
             data-testid={`preset-filter-${filter}`}
-            onClick={() => setActiveFilter(filter)}
-            className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+            onClick={() => {
+              setActiveFilter(filter);
+              toast.success(`Filter: ${filter}`);
+            }}
+            className={`relative px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
               activeFilter === filter 
-                ? 'bg-text-primary text-base shadow-sm' 
+                ? 'text-base' 
                 : 'bg-elevated text-text-secondary hover:text-text-primary hover:bg-border-divider/50 border border-border-divider'
             }`}
           >
+            {activeFilter === filter && (
+              <motion.div
+                layoutId="active-filter-pill"
+                className="absolute inset-0 bg-text-primary rounded-full -z-10 shadow-md"
+                transition={{ type: "spring", stiffness: 500, damping: 30 }}
+              />
+            )}
             {filter === 'all' && t.filters.all}
             {filter === 'my-deals' && t.filters.myDeals}
             {filter === 'stale' && t.filters.stale}
@@ -216,11 +239,16 @@ export default function DealsPage() {
       {/* Poka-Yoke Modal */}
       <PokaYokeModal 
         isOpen={pokaYoke.isOpen}
-        onClose={() => setPokaYoke({ isOpen: false })}
+        onClose={() => {
+          setPokaYoke({ isOpen: false });
+          toast.error(language === 'id' ? 'Pemindahan dibatalkan.' : 'Move cancelled.');
+          mutate(); // Revert optimistic update
+        }}
         onAutoFix={() => {
           if (pokaYoke.dealId && pokaYoke.targetStage) {
             // Auto fix sets staleDays to 0 virtually by just executing the move
             executeMove(pokaYoke.dealId, pokaYoke.targetStage);
+            setPokaYoke({ isOpen: false });
           }
         }}
         title={language === 'id' ? 'Peringatan Operasional: Deal Usang (Stale)' : 'Operational Warning: Stale Deal'}
@@ -236,7 +264,7 @@ export default function DealsPage() {
       {/* New Deal Modal */}
       <NewDealModal isOpen={isNewDealOpen} onClose={() => {
         setIsNewDealOpen(false);
-        fetchDeals(); // refresh list
+        mutate(); // refresh list
       }} />
     </div>
   );

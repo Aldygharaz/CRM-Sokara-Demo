@@ -89,6 +89,8 @@ export interface DatabaseState {
   // Helpers
   addActivity: (activity: Omit<Activity, 'id' | 'date'>) => void;
   addDeal: (dealData: Omit<Deal, 'id' | 'createdAt' | 'updatedAt' | 'staleDays'>) => void;
+  addCompany: (companyData: Omit<Company, 'id'>) => Company;
+  addContact: (contactData: Omit<Contact, 'id'>) => Contact;
   updateDealStage: (dealId: string, stage: DealStage) => void;
   updateTaskStatus: (taskId: string, status: TaskStatus) => void;
 
@@ -177,6 +179,24 @@ export const useDatabaseStore = create<DatabaseState>()(
             winProbability: dealData.winProbability || 10,
           }, ...state.deals]
         }));
+      },
+
+      addCompany: (companyData) => {
+        const newCompany: Company = {
+          ...companyData,
+          id: `c${Date.now()}`
+        };
+        set((state) => ({ companies: [newCompany, ...state.companies] }));
+        return newCompany;
+      },
+
+      addContact: (contactData) => {
+        const newContact: Contact = {
+          ...contactData,
+          id: `ct${Date.now()}`
+        };
+        set((state) => ({ contacts: [newContact, ...state.contacts] }));
+        return newContact;
       },
 
       updateDealStage: (dealId, stage) => {

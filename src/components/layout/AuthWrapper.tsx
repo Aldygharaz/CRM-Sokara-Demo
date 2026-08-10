@@ -38,8 +38,9 @@ export function AuthWrapper({ children }: { children: React.ReactNode }) {
     return (
       <div className="fixed inset-0 bg-base flex flex-col items-center justify-center p-6 z-50">
         <div className="w-full max-w-md card p-8 flex flex-col items-center text-center">
-          <div className="w-16 h-16 rounded-2xl bg-brand/10 flex items-center justify-center mb-6">
-            <Shield className="w-8 h-8 text-brand" />
+          <div className="flex items-center justify-center mb-6">
+            <img src="/sokara-logomark-transparent-dark.svg" alt="Sokara Logo" className="w-16 h-16 dark:hidden" />
+            <img src="/sokara-logomark-transparent-light.svg" alt="Sokara Logo" className="w-16 h-16 hidden dark:block" />
           </div>
           
           <h1 className="text-2xl font-bold text-text-primary mb-2">

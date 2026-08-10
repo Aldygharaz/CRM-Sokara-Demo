@@ -5,6 +5,8 @@ import { X, Mail, Send, Calendar, Phone, Activity } from "lucide-react";
 import { Deal } from "./KanbanBoard";
 import { getDealActivities, addActivity } from "@/app/actions/activity";
 import { useStore } from "@/store/useStore";
+import { motion, AnimatePresence } from "framer-motion";
+import InteractiveTiltCard from "@/components/ui/InteractiveTiltCard";
 
 type DealActivity = Awaited<ReturnType<typeof getDealActivities>>[0];
 
@@ -26,10 +28,8 @@ export function DealInspector({ deal, onClose }: { deal: Deal | null, onClose: (
     }
   }, [deal]);
 
-  if (!deal) return null;
-
   const handleSendEmail = async () => {
-    if (!emailBody.trim() || !currentUser) return;
+    if (!emailBody.trim() || !currentUser || !deal) return;
     setIsSending(true);
     
     // Simulate sending email and then log activity
@@ -49,15 +49,21 @@ export function DealInspector({ deal, onClose }: { deal: Deal | null, onClose: (
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end">
-      {/* Backdrop */}
-      <div 
-        className="absolute inset-0 bg-base/80 backdrop-blur-sm transition-opacity"
-        onClick={onClose}
-      />
-      
-      {/* Slide-over Panel */}
-      <div className="relative w-full max-w-lg bg-canvas border-l border-border-divider h-full shadow-2xl flex flex-col animate-in slide-in-from-right duration-300">
+    <AnimatePresence>
+      {deal && (
+        <motion.div key="deal-inspector" className="fixed inset-0 z-[100] flex justify-end">
+          {/* Backdrop */}
+          <motion.div 
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="absolute inset-0 bg-base/80 backdrop-blur-sm"
+            onClick={onClose}
+          />
+          
+          {/* Slide-over Panel */}
+          <motion.div 
+            initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }} transition={{ type: "spring", damping: 25, stiffness: 300 }}
+            className="relative w-full max-w-lg bg-canvas border-l border-border-divider h-full shadow-2xl flex flex-col"
+          >
         
         {/* Header */}
         <div className="p-6 border-b border-border-divider flex items-center justify-between bg-elevated shrink-0">
@@ -87,7 +93,7 @@ export function DealInspector({ deal, onClose }: { deal: Deal | null, onClose: (
           <section className="flex flex-col gap-3">
             <h3 className="text-sm font-semibold text-text-secondary uppercase tracking-wider">{t.about}</h3>
             
-            <div className="bg-elevated border border-border-divider rounded-xl p-4 flex flex-col gap-3">
+            <InteractiveTiltCard className="bg-elevated border border-border-divider rounded-xl p-4 flex flex-col gap-3 cursor-default">
               {deal.company && (
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-text-muted">Company</span>
@@ -104,7 +110,7 @@ export function DealInspector({ deal, onClose }: { deal: Deal | null, onClose: (
                 <span className="text-text-muted">Probability</span>
                 <span className="font-medium text-text-primary">{deal.winProbability}%</span>
               </div>
-            </div>
+            </InteractiveTiltCard>
           </section>
 
           {/* Activity & Email Composer */}
@@ -158,9 +164,10 @@ export function DealInspector({ deal, onClose }: { deal: Deal | null, onClose: (
             </div>
 
           </section>
-
         </div>
-      </div>
-    </div>
+        </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }

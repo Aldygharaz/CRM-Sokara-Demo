@@ -24,6 +24,9 @@ interface AppState {
 
   theme: 'dark' | 'light';
   setTheme: (theme: 'dark' | 'light') => void;
+
+  globalSearchQuery: string;
+  setGlobalSearchQuery: (q: string) => void;
 }
 
 export const useStore = create<AppState>()(
@@ -41,6 +44,9 @@ export const useStore = create<AppState>()(
 
       theme: 'dark',
       setTheme: (theme) => set({ theme }),
+
+      globalSearchQuery: '',
+      setGlobalSearchQuery: (q) => set({ globalSearchQuery: q }),
     }),
     {
       name: 'sokara-crm-storage',

@@ -3,6 +3,7 @@
 import React from 'react';
 import { AlertTriangle, Sparkles, X } from 'lucide-react';
 import { useStore } from '@/store/useStore';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface PokaYokeModalProps {
   isOpen: boolean;
@@ -15,12 +16,25 @@ interface PokaYokeModalProps {
 export default function PokaYokeModal({ isOpen, onClose, onAutoFix, title, description }: PokaYokeModalProps) {
   const { language } = useStore();
 
-  if (!isOpen) return null;
+  // if (!isOpen) return null; // Removed for AnimatePresence to work
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-base/80 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-      <div className="bg-elevated border border-warning/30 shadow-2xl rounded-2xl w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-200">
-        <div className="bg-warning/10 p-4 flex items-start gap-3">
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-base/80 backdrop-blur-sm p-4"
+        >
+          <motion.div 
+            initial={{ scale: 0.9, y: 20, opacity: 0 }}
+            animate={{ scale: 1, y: 0, opacity: 1 }}
+            exit={{ scale: 0.9, y: 20, opacity: 0 }}
+            transition={{ type: 'spring', damping: 20, stiffness: 300 }}
+            className="bg-elevated border border-warning/30 shadow-2xl rounded-2xl w-full max-w-md overflow-hidden"
+          >
+            <div className="bg-warning/10 p-4 flex items-start gap-3">
           <div className="w-10 h-10 rounded-full bg-warning/20 flex items-center justify-center shrink-0">
             <AlertTriangle className="w-5 h-5 text-warning" />
           </div>
@@ -45,7 +59,7 @@ export default function PokaYokeModal({ isOpen, onClose, onAutoFix, title, descr
             <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out" />
             <Sparkles className="w-4 h-4 animate-pulse relative z-10" />
             <span className="relative z-10">
-              {language === 'id' ? '✨ Auto-Fix (Selesaikan Otomatis)' : '✨ Auto-Fix (Resolve Automatically)'}
+              {language === 'id' ? 'Auto-Fix (Selesaikan Otomatis)' : 'Auto-Fix (Resolve Automatically)'}
             </span>
           </button>
           
@@ -56,7 +70,9 @@ export default function PokaYokeModal({ isOpen, onClose, onAutoFix, title, descr
             {language === 'id' ? 'Abaikan & Lanjutkan' : 'Ignore & Continue'}
           </button>
         </div>
-      </div>
-    </div>
+        </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
